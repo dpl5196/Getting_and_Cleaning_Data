@@ -19,9 +19,18 @@ Documents include:
 ##Directions
 
 * Unzip the source (https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip) into a folder on your local drive, say C:/Coursera/Documents/R/
+* Make sure following packages are installed and Library's loaded:
+* install.packages("httr")
+library("httr", lib.loc="~/R/win-library/3.1")
+install.packages("plyr")
+library("plyr", lib.loc="~/R/win-library/3.1")
+install.packages("rRcurl")
+library("RCurl", lib.loc="~/R/win-library/3.1")
+install.packages("tidy")
+library("tidyr", lib.loc="~/R/win-library/3.1")
 
 * Put run_analysis.R into c:/Cousera/UCI HAR Dataset/
 
-* In RStudio: setwd("C:/Cousera/UCI HAR Dataset/”), followed by: source("run_analysis.R")
+* In RStudio: setwd("C:/Cousera/UCI HAR Dataset/”), followed by: source("run_analysis.R") - Final step of script will create final text file - data_set_with_the_averages.txt -  
 
-* Use data <- read.table("data_set_with_the_averages.txt") to read the data. It is 180x68 because there are 30 subjects and 6 activities, thus "for each activity and each subject" means 30 *6 =180 rows. 
+* Use data <- read.table("data_set_with_the_averages.txt") to read the data in Rstudio. It is 180x68 because there are 30 subjects and 6 activities, thus "for each activity and each subject" means 30 *6 =180 rows. 

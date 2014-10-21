@@ -1,46 +1,86 @@
-Course Project Code Book
-========================
+Course Project Code Book – Getting And Cleaning Data by Monica Mitchell
+Github Repo: https://github.com/dpl5196/Getting_and_Cleaning_Data.git
+ R Script Name: run_analysis.R
+Explanation of data from original source:http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones
+Source of original data set: https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip
+Part 1 - Prep work
+* Unzip the source (https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip) into a folder on your local drive, say C:/Coursera/UCI HAR Dataset/
+    (this will make it easy to run the script below.)
+* Put run_analysis.R into the same directory  c:/Cousera/UCI HAR Dataset
 
-Source of the original data: https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip
+*In RStudio make sure the following packages are installed and loaded:
+>install.packages("httr") library("httr", lib.loc="~/R/win-library/3.1") 
+>install.packages("plyr") library("plyr", lib.loc="~/R/win-library/3.1") 
+>install.packages("rRcurl") library("RCurl", lib.loc="~/R/win-library/3.1") 
+>install.packages("tidy") library("tidyr", lib.loc="~/R/win-library/3.1")
 
-Original description: http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones
+Part 2 - Running of Script 
 
-The attached R script (run_analysis.R) performs the following to clean up the data:
+* In RStudio: 
+> setwd("c:/Cousera/UCI HAR Dataset/
+> source("run_analysis.R")
 
-* Merges the training and test sets to create one data set, 
-  namely train/X_train.txt with test/X_test.txt, the result of which is a 10299x561 data frame, as in the original description ("Number of Instances: 10299" and "Number of Attributes: 561"), 
-  train/subject_train.txt with test/subject_test.txt, the result of which is a 10299x1 data frame with subject IDs,
-  and train/y_train.txt with test/y_test.txt, the result of which is also a 10299x1 data frame with activity IDs.
-  
-  * Reads features.txt and extracts only the measurements on the mean and standard deviation for each measurement. The result is a 10299x66 data frame, because only 66 out of 561 attributes are measurements on the mean and standard deviation. All measurements appear to be floating point numbers in the range (-1, 1).
-  
-  
-  * Reads activity_labels.txt and applies descriptive activity names to name the activities in the data set:
 
-        walking        
-        walkingupstairs        
-        walkingdownstairs        
-        sitting        
-        standing
 
-The script also appropriately labels the data set with descriptive names: all feature names (attributes) and activity names are converted to lower case, underscores and brackets () are removed. Then it merges the 10299x66 data frame containing features with 10299x1 data frames containing activity labels and subject IDs. The result is saved as tidy_data.txt, a 10299x68 data frame such that the first column contains subject IDs, the second column activity names, and the last 66 columns are measurements. Subject IDs are integers between 1 and 30 inclusive. The names of the attributes are similar to the following:
 
-tbodyacc-mean-x 
-        
-        tbodyacc-mean-y 
-        tbodyacc-mean-z 
-        tbodyacc-std-x 
-        tbodyacc-std-y 
-        tbodyacc-std-z 
-        tgravityacc-mean-x 
-        tgravityacc-mean-y
-        * Finally, the script creates a 2nd, independent tidy data set with the average of each measurement for each activity and each subject. The result is saved as data_with_the_averages.txt, a 180x68 data frame, where as before, the first column contains subject IDs, the second column contains activity names (see below), and then the averages for each of the 66 attributes are in columns 3...68. There are 30 subjects and 6 activities, thus 180 rows in this data set with averages.
 
-Activity Names
+It reads these datasets and has the following observations and variables
+•  	X_train.txt 7352 observations of 561 variables v1, v2, v3…. – Variables are integers
+•	X_test.txt 2947 observations of 561 variables v1, v2, v3… – Variables are integers
+•	subject_train.txt 7352 observations of 1 variable v1 – Variable is an integer
+•	subject_test.txt 2947 observations of 1 variable v1 Variable is an integer
+•	y_train.txt 7352 observations of 1 variable v1 	Variable is an integer	y_test.txt 2947 observations of 1 variable v1  - Variable is an integer
+•	features.txt 561 observations of 2 variables v1, v2 where v2 includes mean and STD – Variables are labels such as below – later these will be the labels used in the data tables created when step1 of the script is run and subsetted down to just mean and std during step 2, later all feature names (attributes) are converted to lower case, underscores and brackets () are removed.:
+•	tBodyGyro-std()-X
+•	tBodyGyro-std()-Y
+•	tBodyGyroJerk-mean()-Y
+•	tBodyGyroJerk-mean()-Z
+•	tBodyAccMag-mean()
+•	tGravityAcc-max()-X
+•	tGravityAcc-max()-Y
+•	tGravityAcc-max()-Z
+•activity_labels.txt 6 observations of 2 variables v1, v2- I variable is an integer and the other variable is a descriptive activity name to name the activities in the data set that will be used in step 3 of the script to Read activity_labels.txt and applies descriptive activity names to name the activities in the data set, later in the script all activity names (attributes) are converted to lower case, underscores and brackets () are removed.:
+•	WALKING
+•	WALKING_UPSTAIRS
+•	WALKING_DOWNSTAIRS
+•	SITTING
+•	STANDING
+•	LAYING
+Since the data are in rows, Step 1 of the script uses the read.table command to read these text files and combine the using the rbind function:
+•	it reads the data from X_train.txt and X_test.txt into a variable X using rbind; merges the data  whereas X has 10299 observations of 561 variables
+•	then reads the data from subject_train.txt and subject_test.txt into a variable Subdt using rbind; merges the data  whereas  Subdt 10299 observations of 1 variable
+•	then reads data from y_train.txt and y_test.txt into a variable Y using rbind; merges the data  whereas y 10299 observations of 1 variable
 
-      walking
-      walkingupstairs
-      walkingdownstairs 
-      sitting
-      standing
-      laying
+Step 2, Extracts only the measurements on the mean and standard deviation for each measurement. 
+
+It then extracts the list of rows in the features data set to just those called for in the instructions, which are the Mean or STD measurements, we do this using the grep command. This makes it more manageable. 
+The script then then subsets the X dataset based on that list of rows with mean and STD and sets the names to lower case using gsub command (is a good practice to get into.) This results in the data set X being cut down to 10299 observations of 66 variables.
+Sample of X column headings after subset tbodyacc-mean-x tbodyacc-mean-y tbodyacc-mean-z tbodyacc-std-x tbodyacc-std-y
+
+Step 3 Uses descriptive activity names to name the activities in the data set
+The script next reads activity labels from activity_labels.txt and then applies, lower case to those activity labels and replaces these lower case activity labels in the names of the merged Y data set to give Y descriptive activity names using the gsub command. I used the descriptive labels that were provided as the labels by the originators of the source data, since they are readable by the human eye and since they fit the definition of good row names (no space, no dots, no underscores and no parens)
+V1 V2
+1 1 walking 2 2 walkingupstairs 3 3 walkingdownstairs 4 4 sitting 5 5 standing 6 6 laying
+
+Steps 4 
+Appropriately labels the data set with descriptive variable names. 
+Call out the creation of a new data set and add the descriptive label names and then write the TXT file tidy_data_.txt using the write.table command. The script then removes _and other () using the gsub command since the names of variables should be lowercase, descriptive, not duplicative, free from _ underscore, free from dot, and free from white space. 
+
+Step 5 
+From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject
+The script then merges all the data into a final data set that is saved as data_with_the_averages.txt. Final observations of 180 variables 68
+
+
+Sample of first few column headings of final file data_with_the_averages.txt subject activity tbodyacc-mean-x tbodyacc-mean-y tbodyacc-mean-z tbodyacc-std-x .  I left these headers for 2 reasons - 1) they do not violate the rules for headers since they do not contain space, dots, underscores, or parenthesis and 2) the source data did not give translations beyond the text provided. For this class project did not see the need to pretty up the names further. As stated above text files are not always pretty.  To see pretty data set a variable equal to the text file in R using a statement like:  data <- read.table("data_with_the_averages.txt ", header=TRUE)
+
+List of Variables created by run_analysis.R (does not repeat variables from original data sets and source files which are explained in original sources and noted above). 
+X - Created from merge of X_train.txt and X_test.txt into a variable X using rbind 
+Y - Created from merge of y_train.txt and y_test.txt into a variable Y using rbind 
+Subdt - Created from merge of subject_train.txt and subject_test.txt into a variable Subdt using rbind, 
+featureindices - rows from features.txt with mean and std 
+cleantraintest - dataset that merges X, Y, Subdt , 
+uniquesubjects - unique entries from the subdt data set using unique command, numbersubjects - number of items in unique subjects calculated using length command on the unique subjects, 
+numberactivities - number of activities using length command 
+numberCols - number of columns in cleantraintest 
+final - used for size calculation
+

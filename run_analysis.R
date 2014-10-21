@@ -69,3 +69,7 @@ for (c2 in 1:numbersubjects) {
 } 
 write.table(final, "data_with_the_averages.txt", row.name=FALSE)
 
+## to View the data in Rstudio you can run the following script 
+##data <- read.table("data_with_the_averages.txt",  header=TRUE) to read the data.
+## View(data)
+
